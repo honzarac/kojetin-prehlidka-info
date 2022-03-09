@@ -8,13 +8,17 @@ module.exports = {
       padding: '0',
       margin: '0',
     },
-    colors: {
-      'kjBlue': '#264296',
-      'kjOrange': '#f58227'
+    fontFamily: {
+      sans: ['Encode sans', 'sans-serif'],
+      serif: ['Encode sans', 'serif'],
     },
-    extend: {},
+    extend: {
+      colors: {
+        'kjBlue': '#264296',
+        'kjOrange': '#f58227',
+      },
+    },
   },
   plugins: [
-    require('flowbite/plugin')
   ],
 }
