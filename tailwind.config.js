@@ -9,10 +9,12 @@ module.exports = {
       margin: '0',
     },
     colors: {
-      blue: '#264296',
-      orange: '#f58227'
+      'kjBlue': '#264296',
+      'kjOrange': '#f58227'
     },
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')
+  ],
 }

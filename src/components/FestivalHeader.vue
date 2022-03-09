@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <h1 class="text-5xl text-orange font-bold mt-36">
+    <h1 class="text-5xl text-kjOrange font-bold mt-36">
       DIVADELNÍ KOJETÍN <br><small>2022</small>
     </h1>
   </div>

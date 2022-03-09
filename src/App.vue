@@ -1,8 +1,10 @@
 <template>
   <div class="flex flex-row h-full">
-    <div class="basis-4/12 bg-blue">
+    <div class="basis-4/12 bg-kjBlue">
       <FestivalHeader/>
-      <FestivalProgram/>
+      <div class="m-12 mt-36">
+        <FestivalProgram/>
+      </div>
     </div>
     <div class="basis-8/12"><MainSlider/></div>
   </div>
