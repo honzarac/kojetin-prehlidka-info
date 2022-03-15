@@ -1,33 +1,62 @@
 <template>
-  <Splide :options="{ rewind: true, cover: true, height: '100vh', arrows: false, padding: 0, autoplay: true, interval: 5000 }">
-    <template v-for="(item, index) in slideshowImages">
+  <Splide :options="{
+    rewind: false,
+    cover: true,
+    height: '100vh',
+    arrows: false,
+    padding: 0,
+    autoplay: true,
+    interval: 1000,
+    speed: 1000,
+  }" @splide:moved="moveToNextShow()">
+    <template v-for="(photo) in shows[0].photos">
       <SplideSlide>
-        <img :src="item">
+        <img :src="photo">
       </SplideSlide>
     </template>
   </Splide>
+  <div class="absolute bottom-0 left-0 p-16 text-white w-full text-center text-3xl bg-gradient-to-b from-transparent to-black font-bold">
+    {{shows[0].showName}}
+  </div>
 </template>
 
 <script>
 import {Splide, SplideSlide} from '@splidejs/vue-splide'
 import '@splidejs/splide/dist/css/splide.min.css'
+import {defineComponent, ref, toRefs} from "vue";
 
-export default {
+export default defineComponent({
   name: 'MainSlider',
-  computed: {
-    slideshowImages: () => {
-      return [
-        '/shows/sheldon/245824521_5085846968098340_2359551967150374682_n.jpg',
-        '/shows/sheldon/246268922_5085848844764819_8293591490491303798_n.jpg',
-        '/shows/sheldon/246414174_5085847621431608_4060540322586648233_n.jpg',
-        '/shows/sheldon/246516738_5085849824764721_2020597678071109319_n.jpg',
-        '/shows/sheldon/246625877_5085846318098405_2389649937006242802_n.jpg'
-      ];
+  props: {
+    shows: {
+      type: Array,
+      required: true,
+    }
+  },
+  methods: {
+    moveToNextShow() {
+
+    }
+  },
+  setup(props) {
+    let {shows} = toRefs(props)
+    let currentShow = ref(null)
+    let currentShowIndex = ref(0)
+
+    return {
+      currentShow,
+      currentShowIndex
+    }
+  },
+  computed() {
+    if (this.shows.length > 5) {
+      alert(2)
     }
   },
   components: {
     Splide,
     SplideSlide,
   }
-}
+})
 </script>
+

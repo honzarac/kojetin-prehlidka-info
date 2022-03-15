@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {Db, MongoClient} from "mongodb";
-import {addMinutes} from "date-fns";
-import { formatInTimeZone } from 'date-fns-tz'
+import { DateTime } from "luxon";
 
 @Injectable()
 export class ShowService {
@@ -11,14 +10,16 @@ export class ShowService {
       .collection('shows')
       .find({
         date: {
-          $gte: new Date(date),
-          $lt: new Date(date.setHours(23, 59)),
+          $gte: date,
+          $lte: date.set({hour: 23, minute: 59}),
         },
       })
     let newShows = await shows.toArray()
+    date = DateTime.local().setZone('Europe/Prague')
     let modulator = 0
+
     return newShows.map((document) => {
-      document.time = formatInTimeZone(addMinutes(new Date(), modulator), 'Europe/Prague', 'HH:mm')
+      document.time = date.plus({minutes: modulator}).toLocaleString(DateTime.TIME_24_SIMPLE)
       document.length = 2
       modulator += 3
       return document

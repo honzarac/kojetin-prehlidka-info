@@ -9,22 +9,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ShowService = void 0;
 const common_1 = require("@nestjs/common");
 const mongodb_1 = require("mongodb");
-const date_fns_1 = require("date-fns");
-const date_fns_tz_1 = require("date-fns-tz");
+const luxon_1 = require("luxon");
 let ShowService = class ShowService {
     async getShows(date) {
         let shows = this.getMongoClient()
             .collection('shows')
             .find({
             date: {
-                $gte: new Date(date),
-                $lt: new Date(date.setHours(23, 59)),
+                $gte: date,
+                $lte: date.set({ hour: 23, minute: 59 }),
             },
         });
         let newShows = await shows.toArray();
+        date = luxon_1.DateTime.local().setZone('Europe/Prague');
         let modulator = 0;
         return newShows.map((document) => {
-            document.time = (0, date_fns_tz_1.formatInTimeZone)((0, date_fns_1.addMinutes)(new Date(), modulator), 'Europe/Prague', 'HH:mm');
+            document.time = date.plus({ minutes: modulator }).toLocaleString(luxon_1.DateTime.TIME_24_SIMPLE);
             document.length = 2;
             modulator += 3;
             return document;

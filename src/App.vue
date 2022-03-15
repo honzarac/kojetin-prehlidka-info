@@ -1,10 +1,17 @@
 <template>
   <div id="app" class="flex flex-row h-full">
     <div class="flex flex-col bg-white basis-5/12">
-      <FestivalHeader :dayName="dayName" v-if="dayName" />
+      <FestivalHeader :dayName="dayName" />
       <FestivalProgram :shows="shows" :loading="loading"/>
     </div>
-    <div class="basis-7/12"><MainSlider/></div>
+    <div class="basis-7/12 relative">
+      <div v-if="shows.length <= 0">
+        <FestivalHeader/>
+      </div>
+      <div v-else-if="shows.length > 0">
+        <MainSlider :shows="shows"/>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -1,21 +1,21 @@
 <template>
   <div id="programItem" class="w-full" :class="'state-' + state">
-<!--    <h3 class="float-right inline-block text-3xl font-extrabold" :class="past ? 'text-gray-700' : 'text-kjBlue'">-->
-<!--      {{show.time.split(':')[0]}}<span class="text-base align-top pl-0.5">{{show.time.split(':')[1]}}</span>-->
-<!--    </h3>-->
-    <h3 class="text-2xl font-semibold mb-1 group-name">
+<!--    <div v-if="state === 'active'" class="active-item-pulse z-10" style="width: 50%; height: 100%; position: absolute; top: 0px; left: 0px;">-->
+
+<!--    </div>-->
+    <h3 class="float-right inline-block text-3xl font-extrabold show-time z-20 relative">
+      {{show.time.split(':')[0]}}<span class="text-base align-top pl-0.5">{{show.time.split(':')[1]}}</span>
+    </h3>
+    <h3 class="font-semibold mb-1 group-name text-kjBlue z-20 relative">
       {{show.groupName}}
     </h3>
-    <h2 class="font-extrabold text-4xl" style="font-variant: small-caps">{{show.showName}}</h2>
-<!--    <div class="w-full rounded-full h-1 mt-4" v-if="active">-->
-<!--      <div class="bg-kjBlue h-1 rounded-full" :style="'width: ' + progress + '%'"></div>-->
-<!--    </div>-->
+    <h2 class="font-extrabold show-name z-20 relative">{{show.showName}}</h2>
   </div>
 </template>
 
 <script>
 import {defineComponent, computed, ref, unref, onMounted, toRefs} from 'vue'
-import {format, isWithinInterval, differenceInSeconds} from 'date-fns'
+import { DateTime, Interval, Settings } from "luxon";
 
 export default defineComponent({
   name: 'FestivalProgramItem',
@@ -26,56 +26,41 @@ export default defineComponent({
     }
   },
   setup(props) {
+    Settings.defaultZoneName = "Europe/Prague"
     const {show} = toRefs(props)
 
-    const state = ref('not_started') // 'active', 'past', 'not_started'
-    // const progress = ref()
+    const state = ref('not-started') // 'active', 'past', 'not-started'
 
-    // const active = computed(() => {
-    //   console.log(show, this.show)
-    //   return isWithinInterval(new Date(), {
-    //     start: new Date().setHours(parseInt(show.time.split(':')[0]), parseInt(show.time.split(':')[1])),
-    //     end: new Date().setHours(parseInt(show.time.split(':')[0]), parseInt(show.time.split(':')[1]) + show.length)
-    //   })
-    // })
+    const checkState = () => {
+      let start = DateTime.now().set({hour: parseInt(show.value.time.split(':')[0]), minute: parseInt(show.value.time.split(':')[1]), seconds: 0})
+      let end = start.plus({minutes: show.value.length})
+      let fullLengthInterval = Interval.fromDateTimes(start, end)
 
-    // const past = computed(()=> show.time === '8:15')
+      if (fullLengthInterval.isAfter(DateTime.now())) {
+        state.value = 'not-started'
+      } if (fullLengthInterval.isBefore(DateTime.now())) {
+        state.value = 'past'
+      } if (fullLengthInterval.contains(DateTime.now())) {
+        state.value = 'active'
+      }
+    };
 
-    // const now = ref(new Date())
-
-    // onMounted(() => {
-    //   setInterval(() => {
-    //     // TODO progress.value,
-    //   })
-    // })
+    onMounted(() => {
+      setInterval(checkState, 1000)
+    })
 
     return {
       show,
       state
     }
   },
-  // mounted: function() {
-  //   var app = this;
-  //   setInterval(function(){
-  //     app.now = new Date();
-  //
-  //     let start = new Date().setHours(parseInt(app.show.time.split(':')[0]), parseInt(app.show.time.split(':')[1]))
-  //     let end = new Date().setHours(parseInt(app.show.time.split(':')[0]), parseInt(app.show.time.split(':')[1]) + app.show.length)
-  //
-  //     console.log(new Date(start), new Date())
-  //     console.log(differenceInSeconds(start, new Date()), differenceInSeconds(end, start))
-  //     app.progress = (differenceInSeconds(start, new Date()) / differenceInSeconds(end, start)) * 100
-  //   }, 1000);
-  // }
 })
 </script>
 
-<style>
-  .show-shadow {
-    text-shadow: 2.5px 2.5px 1px #000;
-  }
+<style lang="scss">
   #programItem {
     padding: max(10px, 5%) 5%;
+    position: relative;
   }
   @keyframes program-pulse {
     0%   { background: #F2D3BC; }
@@ -86,5 +71,38 @@ export default defineComponent({
     animation: program-pulse 3s infinite linear;
   }
 
-  
+  .show-name {
+    @apply text-kjOrange;
+    @apply text-4xl;
+    font-variant: small-caps;
+    text-shadow: 2.5px 2.5px 1px #264296;
+  }
+
+  .show-time {
+    @apply text-kjBlue;
+  }
+
+  .group-name {
+    @apply text-2xl;
+  }
+
+  .state-past {
+    font-size: 0.3eM;
+    @apply bg-gray-100;
+    .show-name {
+      @apply text-gray-400;
+      @apply text-2xl;
+    }
+    .show-time {
+      @apply text-gray-400;
+    }
+    .group-name {
+      @apply text-gray-400;
+      @apply text-lg;
+    }
+  }
+
+  .state-active {
+    @apply active-item-pulse;
+  }
 </style>

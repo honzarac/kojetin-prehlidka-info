@@ -12,7 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const show_service_1 = require("./show/show.service");
-const date_fns_1 = require("date-fns");
+const show_transformer_1 = require("./show/show.transformer");
+const luxon_1 = require("luxon");
 let AppController = class AppController {
     constructor(showService) {
         this.showService = showService;
@@ -21,11 +22,15 @@ let AppController = class AppController {
         return { status: 'ok' };
     }
     async getShows() {
-        let loadDate = new Date('2022-05-12');
-        let days = { 3: 'Středa', 4: 'Čtvrtek', 5: 'Pátek', 6: 'Sobota', 7: 'Neděle' };
+        let loadDate = luxon_1.DateTime.fromISO('2022-05-12');
+        let shows = await this.showService.getShows(loadDate);
+        let transformer = new show_transformer_1.ShowTransformer;
+        let showPromises = shows.map(async (show) => await transformer.transform(show));
+        let dayName = loadDate.setLocale('cs').toFormat('cccc');
+        dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
         return {
-            dayName: days[(0, date_fns_1.format)(loadDate, 'i')],
-            shows: await this.showService.getShows(loadDate)
+            dayName: dayName,
+            shows: await Promise.all(showPromises)
         };
     }
     import() {

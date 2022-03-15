@@ -18,7 +18,7 @@ export default defineComponent({
   props: {
     dayName: {
       type: String,
-      required: true
+      required: false
     }
   },
 });

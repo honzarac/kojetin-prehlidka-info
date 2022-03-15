@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import {ShowService} from "./show/show.service";
-import { format } from 'date-fns'
+import {ShowTransformer} from "./show/show.transformer";
+import { DateTime } from "luxon";
 
 @Controller()
 export class AppController {
@@ -13,12 +14,17 @@ export class AppController {
 
   @Get('/shows')
   async getShows(): Promise<object> {
-    let loadDate = new Date('2022-05-12')
-    let days = {3: 'Středa', 4: 'Čtvrtek', 5: 'Pátek', 6: 'Sobota', 7: 'Neděle'}
+    let loadDate = DateTime.fromISO('2022-05-12')
 
+    let shows = await this.showService.getShows(loadDate)
+    let transformer = new ShowTransformer
+    let showPromises = shows.map(async (show) => await transformer.transform(show))
+
+    let dayName = loadDate.setLocale('cs').toFormat('cccc')
+    dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
     return {
-      dayName: days[format(loadDate, 'i')],
-      shows: await this.showService.getShows(loadDate)
+      dayName: dayName,
+      shows: await Promise.all(showPromises)
     };
   }
 
