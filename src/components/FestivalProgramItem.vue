@@ -75,7 +75,7 @@ export default defineComponent({
     @apply text-kjOrange;
     @apply text-4xl;
     font-variant: small-caps;
-    text-shadow: 2.5px 2.5px 1px #264296;
+    text-shadow: 2.5px 2.5px 1px black;
   }
 
   .show-time {

@@ -19,6 +19,7 @@
 import {defineComponent, onMounted, ref} from 'vue'
 
 import './app.css'
+import 'animate.css'
 
 import MainSlider from './components/MainSlider.vue'
 import FestivalHeader from './components/FestivalHeader.vue'

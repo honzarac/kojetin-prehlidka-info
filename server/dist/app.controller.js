@@ -22,7 +22,7 @@ let AppController = class AppController {
         return { status: 'ok' };
     }
     async getShows() {
-        let loadDate = luxon_1.DateTime.fromISO('2022-05-12');
+        let loadDate = luxon_1.DateTime.fromISO('2022-05-14');
         let shows = await this.showService.getShows(loadDate);
         let transformer = new show_transformer_1.ShowTransformer;
         let showPromises = shows.map(async (show) => await transformer.transform(show));

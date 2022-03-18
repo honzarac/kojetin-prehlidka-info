@@ -17,7 +17,14 @@ class ShowTransformer {
                     photos: photos,
                 });
             })
-                .catch((reason) => { reject('Nepodařilo se najít složku s fotkama: ' + show.photoFolder + ' s chybou ' + reason); });
+                .catch((reason) => resolve({
+                showName: show.showName,
+                groupName: show.groupName,
+                time: show.time,
+                date: show.date,
+                length: show.length,
+                photos: [],
+            }));
         });
     }
     async getPhotos(folderName) {

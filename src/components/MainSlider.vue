@@ -1,22 +1,26 @@
 <template>
-  <Splide :options="{
-    rewind: false,
+  <Splide :ref="splide" :options="{
+    rewind: true,
     cover: true,
     height: '100vh',
     arrows: false,
     padding: 0,
     autoplay: true,
-    interval: 1000,
+    interval: 4000,
     speed: 1000,
-  }" @splide:moved="moveToNextShow()">
-    <template v-for="(photo) in shows[0].photos">
+    direction: 'ttb',
+  }" @splide:active="activeChanged">
       <SplideSlide>
-        <img :src="photo">
+        <img src="http://localhost:3001/static/plakat-2020w.jpg">
       </SplideSlide>
-    </template>
+      <template v-for="(photo) in photos">
+        <SplideSlide>
+          <img :src="photo.url" v-bind:alt="photo.showName">
+        </SplideSlide>
+      </template>
   </Splide>
-  <div class="absolute bottom-0 left-0 p-16 text-white w-full text-center text-3xl bg-gradient-to-b from-transparent to-black font-bold">
-    {{shows[0].showName}}
+  <div v-if="currentShowName !== ''" class="absolute bottom-0 left-0 pt-24 px-16 pb-8 text-white w-full text-center text-3xl bg-gradient-to-b from-transparent to-black font-bold animate__animated animate__slideInUp">
+    {{currentShowName}}
   </div>
 </template>
 
@@ -34,23 +38,31 @@ export default defineComponent({
     }
   },
   methods: {
-    moveToNextShow() {
-
+    activeChanged(splide, currentSlide) {
+      this.currentShowName = currentSlide.slide.childNodes[1].alt
     }
   },
   setup(props) {
     let {shows} = toRefs(props)
-    let currentShow = ref(null)
-    let currentShowIndex = ref(0)
+    let splide = ref()
+    let currentShowName = ref(null)
+    let photos = ref([])
+
+    photos.value = shows.value.map(
+      (show) => {
+        let photosCollection = [];
+        for(let photo of show.photos) {
+          photosCollection.push({url: photo, showName: show.showName})
+        }
+        return photosCollection
+      })
+    photos.value = [].concat.apply([], photos.value)
 
     return {
-      currentShow,
-      currentShowIndex
-    }
-  },
-  computed() {
-    if (this.shows.length > 5) {
-      alert(2)
+      splide,
+      shows,
+      photos,
+      currentShowName,
     }
   },
   components: {
