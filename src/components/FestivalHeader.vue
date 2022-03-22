@@ -4,7 +4,7 @@
       <img src="/logo.png" class="mb-3">
       <h1 class="text-4xl text-black font-bold text-center">
         DIVADELNÍ KOJETÍN<br>
-        <small class="mt-8 text-kjBlue uppercase">{{dayName}}</small>
+        <small class="mt-8 text-kjBlue uppercase">{{ subtitle }}</small>
       </h1>
     </div>
   </div>
@@ -16,16 +16,10 @@ import {defineComponent} from "vue";
 export default defineComponent({
   name: 'FestivalHeader',
   props: {
-    dayName: {
+    subtitle: {
       type: String,
       required: false
     }
   },
 });
 </script>
-
-<style scoped>
-  #header {
-
-  }
-</style>

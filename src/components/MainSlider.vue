@@ -1,6 +1,6 @@
 <template>
   <Splide :ref="splide" :options="{
-    rewind: true,
+    rewind: false,
     cover: true,
     height: '100vh',
     arrows: false,
@@ -9,8 +9,10 @@
     interval: 4000,
     speed: 1000,
     direction: 'ttb',
+    pagination: false,
+    pauseOnHover: false,
   }" @splide:active="activeChanged">
-      <SplideSlide>
+      <SplideSlide v-if="withProgramSlide">
         <img src="http://localhost:3001/static/plakat-2020w.jpg">
       </SplideSlide>
       <template v-for="(photo) in photos">
@@ -32,36 +34,32 @@ import {defineComponent, ref, toRefs} from "vue";
 export default defineComponent({
   name: 'MainSlider',
   props: {
-    shows: {
+    photos: {
       type: Array,
       required: true,
+    },
+    withProgramSlide: {
+      type: Boolean,
+      default: true,
     }
   },
   methods: {
     activeChanged(splide, currentSlide) {
       this.currentShowName = currentSlide.slide.childNodes[1].alt
+      if ((splide.length-1) === currentSlide.index) {
+        this.emitEndToParent()
+      }
+    },
+    emitEndToParent: function() {
+      this.$emit('end-of-slides')
     }
   },
-  setup(props) {
-    let {shows} = toRefs(props)
+  setup() {
     let splide = ref()
     let currentShowName = ref(null)
-    let photos = ref([])
-
-    photos.value = shows.value.map(
-      (show) => {
-        let photosCollection = [];
-        for(let photo of show.photos) {
-          photosCollection.push({url: photo, showName: show.showName})
-        }
-        return photosCollection
-      })
-    photos.value = [].concat.apply([], photos.value)
 
     return {
       splide,
-      shows,
-      photos,
       currentShowName,
     }
   },

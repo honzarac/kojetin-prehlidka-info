@@ -44,9 +44,10 @@ export default defineComponent({
         state.value = 'active'
       }
     };
+    checkState()
 
     onMounted(() => {
-      setInterval(checkState, 1000)
+      setInterval(checkState, 3000)
     })
 
     return {

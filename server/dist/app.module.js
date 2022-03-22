@@ -12,6 +12,8 @@ const app_controller_1 = require("./app.controller");
 const show_service_1 = require("./show/show.service");
 const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
+const show_transformer_1 = require("./show/show.transformer");
+const photo_service_1 = require("./photo/photo.service");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -23,7 +25,7 @@ AppModule = __decorate([
             }),
         ],
         controllers: [app_controller_1.AppController],
-        providers: [show_service_1.ShowService],
+        providers: [show_service_1.ShowService, show_transformer_1.ShowTransformer, photo_service_1.PhotoService],
     })
 ], AppModule);
 exports.AppModule = AppModule;

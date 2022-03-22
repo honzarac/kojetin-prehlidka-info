@@ -14,23 +14,30 @@ const common_1 = require("@nestjs/common");
 const show_service_1 = require("./show/show.service");
 const show_transformer_1 = require("./show/show.transformer");
 const luxon_1 = require("luxon");
+const photo_service_1 = require("./photo/photo.service");
 let AppController = class AppController {
-    constructor(showService) {
+    constructor(showService, showTransformer, photoService) {
         this.showService = showService;
+        this.showTransformer = showTransformer;
+        this.photoService = photoService;
     }
     getHealth() {
         return { status: 'ok' };
     }
     async getShows() {
-        let loadDate = luxon_1.DateTime.fromISO('2022-05-14');
+        let loadDate = luxon_1.DateTime.fromISO('2022-05-11');
         let shows = await this.showService.getShows(loadDate);
-        let transformer = new show_transformer_1.ShowTransformer;
-        let showPromises = shows.map(async (show) => await transformer.transform(show));
+        let showsPromises = shows.map(async (show) => await this.showTransformer.transform(show));
+        let showsTomorrow = await this.showService.getShows(loadDate.plus({ days: 1 }));
+        let showsTomorrowPromises = showsTomorrow.map(async (show) => await this.showTransformer.transform(show));
         let dayName = loadDate.setLocale('cs').toFormat('cccc');
         dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+        let lastYearPhotos = await this.photoService.loadShowPhotosByFolder('2019');
         return {
             dayName: dayName,
-            shows: await Promise.all(showPromises)
+            shows: await Promise.all(showsPromises),
+            showsTomorrow: await Promise.all(showsTomorrowPromises),
+            lastYearPhotos: lastYearPhotos.map(url => ({ url, showName: '' }))
         };
     }
     import() {
@@ -57,7 +64,9 @@ __decorate([
 ], AppController.prototype, "import", null);
 AppController = __decorate([
     (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [show_service_1.ShowService])
+    __metadata("design:paramtypes", [show_service_1.ShowService,
+        show_transformer_1.ShowTransformer,
+        photo_service_1.PhotoService])
 ], AppController);
 exports.AppController = AppController;
 //# sourceMappingURL=app.controller.js.map

@@ -1,5 +1,5 @@
 <template>
-  <div id="program" class="flex w-full flex-col justify-center grow-0">
+  <div id="program" class="flex w-full flex-col grow-0">
     <div v-if="loading" class="text-center">
       Načítám...
     </div>
