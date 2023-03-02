@@ -19,7 +19,7 @@ export class AppController {
 
   @Get('/shows')
   async getShows(): Promise<object> {
-    let loadDate = DateTime.fromISO('2022-05-11')
+    let loadDate = DateTime.fromISO('2023-03-08')
 
     let shows = await this.showService.getShows(loadDate)
     let showsPromises = shows.map(async (show) => await this.showTransformer.transform(show))
@@ -28,7 +28,7 @@ export class AppController {
 
     let dayName = loadDate.setLocale('cs').toFormat('cccc')
     dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
-    let lastYearPhotos = await this.photoService.loadShowPhotosByFolder('2019')
+    let lastYearPhotos = await this.photoService.loadShowPhotosByFolder('2022')
     return {
       dayName: dayName,
       shows: await Promise.all(showsPromises),
