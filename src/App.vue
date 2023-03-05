@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="flex flex-row h-full">
-    <ProgramPage/>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -9,11 +9,11 @@ import {defineComponent} from 'vue'
 
 import './app.css'
 import 'animate.css'
-import ProgramPage from './pages/ProgramPage.vue';
+import {RouterView} from 'vue-router';
 
 export default defineComponent({
   name: 'App',
-  components: {ProgramPage},
+  components: {RouterView},
 })
 </script>
 
@@ -27,6 +27,6 @@ export default defineComponent({
     overflow: hidden;
   }
   #app {
-    max-height: 100vh;
+    height: 100%;
   }
 </style>

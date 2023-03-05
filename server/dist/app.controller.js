@@ -34,7 +34,6 @@ let AppController = class AppController {
         dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
         let lastYearPhotos = await this.photoService.loadShowPhotosByFolder('2022');
         return {
-            dayName: dayName,
             shows: await Promise.all(showsPromises),
             showsTomorrow: await Promise.all(showsTomorrowPromises),
             lastYearPhotos: lastYearPhotos.map(url => ({ url, showName: '' }))

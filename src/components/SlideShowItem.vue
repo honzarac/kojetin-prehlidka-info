@@ -1,0 +1,194 @@
+<template>
+  <div class="slideshow-item">
+  <div class="slideshow-item-overlay"></div>
+  <transition :name="show.showName">
+    <div :class="['slideshow-item-info', {'animate': showAnimateClass}]">
+      <span>{{ dayName }} {{show.time}}</span>
+      <h1>{{show.showName}}</h1>
+    </div>
+  </transition>
+  <div :class="['slideshow-photo-wrap', {'active': currentPhoto === photoIndex}, {'leaving': leavingPhoto === photoIndex}]" v-for="(photo, photoIndex) in show.photos">
+    <div class="slideshow-photo" :style="{ 'background-image': 'url(\'' + photo + '\'' }">
+    </div>
+  </div>
+  </div>
+</template>
+
+<script>
+import {defineComponent, onMounted, ref, watch} from 'vue'
+  import { DateTime } from "luxon";
+
+  export default defineComponent({
+    name: 'SlideshowItem',
+    props: {
+      show: {
+        type: Object
+      },
+    },
+
+    setup(props) {
+      const currentPhoto = ref(0)
+      const leavingPhoto = ref(null)
+      const dayName = DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc')
+      const showAnimateClass = ref(true)
+
+
+      let nextSlide = () => {
+        leavingPhoto.value = currentPhoto.value
+        currentPhoto.value = Math.floor(Math.random() * props.show.photos.length);
+      }
+
+      onMounted(async () => {
+        setInterval(nextSlide, 3000)
+      })
+
+      // watch(event, () => {
+      //   alert(1)
+      // })
+
+      return { currentPhoto, leavingPhoto, dayName, showAnimateClass }
+    },
+  });
+</script>
+
+<style lang="scss">
+  .slideshow-item {
+    position: relative;
+  }
+
+  .slideshow-item-overlay {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 70%;
+    z-index: 110;
+    background: linear-gradient(
+            to bottom,
+            hsla(0, 0%, 0%, 0) 0%,
+            hsla(0, 0%, 0%, 0.06) 11%,
+            hsla(0, 0%, 0%, 0.13) 20.6%,
+            hsla(0, 0%, 0%, 0.208) 28.9%,
+            hsla(0, 0%, 0%, 0.292) 36.2%,
+            hsla(0, 0%, 0%, 0.379) 42.6%,
+            hsla(0, 0%, 0%, 0.469) 48.3%,
+            hsla(0, 0%, 0%, 0.558) 53.5%,
+            hsla(0, 0%, 0%, 0.644) 58.4%,
+            hsla(0, 0%, 0%, 0.726) 63.2%,
+            hsla(0, 0%, 0%, 0.801) 68.1%,
+            hsla(0, 0%, 0%, 0.867) 73.2%,
+            hsla(0, 0%, 0%, 0.922) 78.8%,
+            hsla(0, 0%, 0%, 0.964) 84.9%,
+            hsla(0, 0%, 0%, 0.991) 92%,
+            hsl(0, 0%, 0%) 100%
+    );
+  }
+
+  .slideshow-item-info {
+    position: absolute;
+    z-index: 120;
+    left: 20vw;
+    bottom: 10%;
+    span {
+      font-size: 40px;
+      text-transform: uppercase;
+      display: block;
+      margin-left: 15px;
+    }
+    h1 {
+      color: white;
+      z-index: 5;
+      line-height: 180px;
+      letter-spacing: -6px;
+      font-weight: 800;
+      font-size: 160px;
+      width: 40vw;
+    }
+  }
+
+  .slideshow-item-info.animate {
+    animation: 2s anim-lineUp ease-out 1;
+  }
+
+  .slideshow-photo-wrap {
+    position: absolute;
+    display: none;
+    top: 0px;
+    left: 0px;
+    z-index: 90;
+  }
+
+  .slideshow-photo {
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .slideshow-item {
+    .slideshow-photo-wrap.active {
+      animation: 1s photo-ease-in ease-out 1;
+      display: block;
+      z-index: 95;
+      .slideshow-photo {
+        animation: 10s zoom-in ease-out 1;
+      }
+    }
+  }
+
+  .slideshow-item {
+    .slideshow-photo-wrap.leaving {
+      animation: 1s photo-ease-out ease-out 1;
+      display: block;
+    }
+  }
+
+  @keyframes anim-lineUp {
+    0% {
+      opacity: 0;
+      clip-path: inset(-100px -500px 0px 40%);
+      transform: translateX(-30%);
+    }
+    20% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+      transform: translateX(0%);
+      clip-path: inset(-100px -500px 0px 0%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0%);
+    }
+  }
+
+  @keyframes zoom-in {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes photo-ease-in {
+    0% {
+      transform: translateX(100vw);
+      opacity: 0.3;
+    }
+    60% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes photo-ease-out {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100vw);
+    }
+  }
+</style>

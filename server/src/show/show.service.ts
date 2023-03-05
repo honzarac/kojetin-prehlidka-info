@@ -15,15 +15,8 @@ export class ShowService {
         },
       })
     let newShows = await shows.toArray()
-    date = DateTime.local().setZone('Europe/Prague')
-    let modulator = 0
 
-    return newShows.map((document) => {
-      document.time = date.plus({minutes: modulator}).toLocaleString(DateTime.TIME_24_SIMPLE)
-      document.length = 2
-      modulator += 3
-      return document
-    })
+    return newShows
   }
 
   import() {
