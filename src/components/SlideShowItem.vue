@@ -3,7 +3,7 @@
   <div class="slideshow-item-overlay"></div>
   <transition :name="show.showName">
     <div :class="['slideshow-item-info', {'animate': changingShow}]">
-      <span class="daytime"><b>{{ dayName }}</b> / <div class="time">{{show.time}}</div></span>
+      <span class="daytime"><b>{{ dayName }}</b> / <div class="time">{{show.time}} <span v-if="show.length">/ {{show.length}} minut</span></div></span>
       <div class="group-name">{{show.groupName}}</div>
       <h1 :class="[{'smaller': show.showName.length > 30}]">{{show.showName}}</h1>
     </div>
@@ -159,7 +159,7 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
 
   .slideshow-item {
     .slideshow-photo-wrap.active {
-      animation: 1s photo-ease-in ease-out 1;
+      animation: 1s photo-ease-in cubic-bezier(.24,.74,.68,1.03) 1;
       display: block;
       z-index: 95;
       .slideshow-photo {
@@ -170,7 +170,7 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
 
   .slideshow-item {
     .slideshow-photo-wrap.leaving {
-      animation: 1s photo-ease-out ease-out 1;
+      animation: 1s photo-ease-out cubic-bezier(.24,.74,.68,1.03) 1;
       display: block;
     }
   }
@@ -178,7 +178,7 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
   @keyframes anim-lineUp {
     0% {
       opacity: 0;
-      clip-path: inset(-100px -500px 0px 40%);
+      clip-path: inset(-100px -500px -100px 40%);
       transform: translateX(-30%);
     }
     20% {
@@ -187,7 +187,7 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
     50% {
       opacity: 1;
       transform: translateX(0%);
-      clip-path: inset(-100px -500px 0px 0%);
+      clip-path: inset(-100px -500px -100px 0%);
     }
     100% {
       opacity: 1;

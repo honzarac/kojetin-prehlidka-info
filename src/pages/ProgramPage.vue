@@ -62,18 +62,14 @@
     background: black;
     padding: 20px;
     position: absolute;
-    top: 5vh;
+    top: 0;
     left: 0;
     z-index: 5000;
     display: flex;
     flex-direction: column;
     align-items: center;
-    -webkit-border-top-right-radius: 10px;
-    -webkit-border-bottom-right-radius: 10px;
-    -moz-border-radius-topright: 10px;
-    -moz-border-radius-bottomright: 10px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+    height: 100%;
+    padding-top: 10vh;
     h2 {
       writing-mode: vertical-lr;
       color: white;
