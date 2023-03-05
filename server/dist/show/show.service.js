@@ -146,6 +146,7 @@ let ShowService = class ShowService {
                 time: '16:00',
                 date: luxon_1.DateTime.local(2023, 3, 12),
                 length: null,
+                photoFolder: 'vyhlaseni'
             },
         ]);
     }

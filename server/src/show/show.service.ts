@@ -143,6 +143,7 @@ export class ShowService {
           time: '16:00',
           date: DateTime.local(2023, 3, 12),
           length: null,
+          photoFolder: 'vyhlaseni'
         },
       ])
   }

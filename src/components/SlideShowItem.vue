@@ -3,9 +3,9 @@
   <div class="slideshow-item-overlay"></div>
   <transition :name="show.showName">
     <div :class="['slideshow-item-info', {'animate': changingShow}]">
-      <span class="daytime"><b>{{ dayName }}</b> / <div class="time">{{show.time}} <span v-if="show.length">/ {{show.length}} minut</span></div></span>
-      <div class="group-name">{{show.groupName}}</div>
-      <h1 :class="[{'smaller': show.showName.length > 30}]">{{show.showName}}</h1>
+      <span class="daytime" v-if="show.time"><b>{{ dayName }}</b> / <div class="time">{{show.time}} <span v-if="show.length">/ {{show.length}} minut</span></div></span>
+      <div class="group-name" v-if="show.groupName">{{show.groupName}}</div>
+      <h1 :class="[{'smaller': show.showName.length >= 20}]">{{show.showName}}</h1>
     </div>
   </transition>
   <div :class="['slideshow-photo-wrap', {'active': currentPhoto === photoIndex}, {'leaving': leavingPhoto === photoIndex}]" v-for="(photo, photoIndex) in show.photos">
@@ -16,8 +16,9 @@
 </template>
 
 <script>
-import {defineComponent, onMounted, ref, watch} from 'vue'
+  import {defineComponent, onMounted, ref, watch} from 'vue'
   import { DateTime } from "luxon";
+  import TimeSettings from "../TimeSettings";
 
   export default defineComponent({
     name: 'SlideshowItem',
@@ -33,11 +34,11 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
     setup(props) {
       const currentPhoto = ref(0)
       const leavingPhoto = ref(null)
-      const dayName = ref(DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc'))
+      const dayName = ref(props.show.date ? DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc') : null)
       const changingShow = ref(true)
 
 
-      let nextSlide = () => {
+      let nextPhoto = () => {
         leavingPhoto.value = currentPhoto.value
         let randNextPhoto = currentPhoto.value;
         do {
@@ -47,18 +48,17 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
       }
 
       onMounted(async () => {
-        setInterval(() => { if (props.autoplay) { nextSlide() }}, 5000)
+        setInterval(() => { if (props.autoplay) { nextPhoto() }}, TimeSettings.photoDuration)
       })
 
       watch(() => props.show, (newShow, oldShow) => {
         if (newShow.showName !== oldShow.showName) {
-          console.log('watch triggered')
           changingShow.value = false
           currentPhoto.value = null
           leavingPhoto.value = null
-          nextSlide()
-          dayName.value = DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc')
-          setTimeout(() => changingShow.value = true, 100)
+          nextPhoto()
+          dayName.value = props.show.date ? DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc') : null
+          setTimeout(() => changingShow.value = true, 30)
         }
       });
 
@@ -141,7 +141,7 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
 
   .slideshow-item-info.animate {
     display: block;
-    animation: 2s anim-lineUp ease-out 1;
+    animation: 2.5s anim-lineUp cubic-bezier(0.22, 1, 0.36, 1) 1;
   }
 
   .slideshow-photo-wrap {
@@ -159,7 +159,7 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
 
   .slideshow-item {
     .slideshow-photo-wrap.active {
-      animation: 1s photo-ease-in cubic-bezier(.24,.74,.68,1.03) 1;
+      animation: 0.8s photo-ease-in cubic-bezier(0.25, 1, 0.5, 1) 1;
       display: block;
       z-index: 95;
       .slideshow-photo {
@@ -170,7 +170,7 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
 
   .slideshow-item {
     .slideshow-photo-wrap.leaving {
-      animation: 1s photo-ease-out cubic-bezier(.24,.74,.68,1.03) 1;
+      animation: 2s photo-ease-out cubic-bezier(0.25, 1, 0.5, 1) 1;
       display: block;
     }
   }
@@ -179,10 +179,10 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
     0% {
       opacity: 0;
       clip-path: inset(-100px -500px -100px 40%);
-      transform: translateX(-30%);
+      transform: translateX(-40%);
     }
     20% {
-      opacity: 0;
+      opacity: 1;
     }
     50% {
       opacity: 1;
@@ -200,14 +200,14 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
       transform: scale(1);
     }
     100% {
-      transform: scale(1.1);
+      transform: scale(1.12);
     }
   }
 
   @keyframes photo-ease-in {
     0% {
       transform: translateX(100vw);
-      opacity: 0.3;
+      opacity: 0.1;
     }
     60% {
       opacity: 1;
