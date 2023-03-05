@@ -2,9 +2,10 @@
   <div class="slideshow-item">
   <div class="slideshow-item-overlay"></div>
   <transition :name="show.showName">
-    <div :class="['slideshow-item-info', {'animate': showAnimateClass}]">
-      <span>{{ dayName }} {{show.time}}</span>
-      <h1>{{show.showName}}</h1>
+    <div :class="['slideshow-item-info', {'animate': changingShow}]">
+      <span class="daytime"><b>{{ dayName }}</b> / <div class="time">{{show.time}}</div></span>
+      <div class="group-name">{{show.groupName}}</div>
+      <h1 :class="[{'smaller': show.showName.length > 30}]">{{show.showName}}</h1>
     </div>
   </transition>
   <div :class="['slideshow-photo-wrap', {'active': currentPhoto === photoIndex}, {'leaving': leavingPhoto === photoIndex}]" v-for="(photo, photoIndex) in show.photos">
@@ -24,29 +25,44 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
       show: {
         type: Object
       },
+      autoplay: {
+        type: Boolean
+      }
     },
 
     setup(props) {
       const currentPhoto = ref(0)
       const leavingPhoto = ref(null)
-      const dayName = DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc')
-      const showAnimateClass = ref(true)
+      const dayName = ref(DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc'))
+      const changingShow = ref(true)
 
 
       let nextSlide = () => {
         leavingPhoto.value = currentPhoto.value
-        currentPhoto.value = Math.floor(Math.random() * props.show.photos.length);
+        let randNextPhoto = currentPhoto.value;
+        do {
+          randNextPhoto = Math.floor(Math.random() * props.show.photos.length)
+        } while (randNextPhoto === currentPhoto.value)
+        currentPhoto.value = randNextPhoto;
       }
 
       onMounted(async () => {
-        setInterval(nextSlide, 3000)
+        setInterval(() => { if (props.autoplay) { nextSlide() }}, 5000)
       })
 
-      // watch(event, () => {
-      //   alert(1)
-      // })
+      watch(() => props.show, (newShow, oldShow) => {
+        if (newShow.showName !== oldShow.showName) {
+          console.log('watch triggered')
+          changingShow.value = false
+          currentPhoto.value = null
+          leavingPhoto.value = null
+          nextSlide()
+          dayName.value = DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc')
+          setTimeout(() => changingShow.value = true, 100)
+        }
+      });
 
-      return { currentPhoto, leavingPhoto, dayName, showAnimateClass }
+      return { currentPhoto, leavingPhoto, dayName, changingShow }
     },
   });
 </script>
@@ -86,27 +102,45 @@ import {defineComponent, onMounted, ref, watch} from 'vue'
 
   .slideshow-item-info {
     position: absolute;
+    display: none;
     z-index: 120;
     left: 20vw;
     bottom: 10%;
-    span {
+    color: white;
+    .daytime {
       font-size: 40px;
       text-transform: uppercase;
       display: block;
       margin-left: 15px;
+      font-family: Montserrat;
+      .time {
+        font-size: 0.8em;
+        display: inline-block;
+        vertical-align: top;
+      }
     }
     h1 {
-      color: white;
       z-index: 5;
       line-height: 180px;
       letter-spacing: -6px;
       font-weight: 800;
       font-size: 160px;
-      width: 40vw;
+      width: 60vw;
+      &.smaller {
+        font-size: 100px;
+        line-height: 120px;
+      }
+    }
+    .group-name {
+      font-family: Montserrat;
+      margin-left: 14px;
+      font-size: 30px;
+      margin-bottom: 5px;
     }
   }
 
   .slideshow-item-info.animate {
+    display: block;
     animation: 2s anim-lineUp ease-out 1;
   }
 

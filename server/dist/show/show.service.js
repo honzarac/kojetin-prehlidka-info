@@ -17,7 +17,6 @@ let ShowService = class ShowService {
             .find({
             date: {
                 $gte: date,
-                $lte: date.set({ hour: 23, minute: 59 }),
             },
         });
         let newShows = await shows.toArray();

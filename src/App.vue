@@ -25,6 +25,7 @@ export default defineComponent({
     height: 100%;
     font-size: 1.7vh;
     overflow: hidden;
+    font-family: Manrope;
   }
   #app {
     height: 100%;
