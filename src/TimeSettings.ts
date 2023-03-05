@@ -2,7 +2,7 @@
 export default class TimeSettings
 {
   // TESTING
-  static showDuration: number = 6 * 1000
+  static showDuration: number = 12 * 1000
   static photoDuration: number = 6 * 1000
   static lastYearPhotosDuration: number = 10 * 1000
 

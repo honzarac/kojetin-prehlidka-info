@@ -159,18 +159,21 @@
 
   .slideshow-item {
     .slideshow-photo-wrap.active {
-      animation: 0.8s photo-ease-in cubic-bezier(0.25, 1, 0.5, 1) 1;
+      animation: 1s photo-ease-in cubic-bezier(0.25, 1, 0.5, 1) 1;
+      animation-delay: 50ms;
+      animation-fill-mode: backwards;
       display: block;
       z-index: 95;
       .slideshow-photo {
         animation: 10s zoom-in ease-out 1;
+        animation-delay: 0.5s;
       }
     }
   }
 
   .slideshow-item {
     .slideshow-photo-wrap.leaving {
-      animation: 2s photo-ease-out cubic-bezier(0.25, 1, 0.5, 1) 1;
+      animation: 1.3s photo-ease-out cubic-bezier(0.25, 1, 0.5, 1) 1;
       display: block;
     }
   }
