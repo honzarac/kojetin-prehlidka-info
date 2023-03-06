@@ -7,6 +7,7 @@
     <SlideShowItem :show="shows[currentShowIndex]" :autoplay="autoplay" v-if="!loading && !showLastYearSlideshow"></SlideShowItem>
     <SlideShowItem :show="lastYear" :autoplay="autoplay" v-if="!loading && showLastYearSlideshow"></SlideShowItem>
   </div>
+  <Partners></Partners>
 </template>
 
 <script>
@@ -15,10 +16,11 @@
   import client from "../service/axios"
   import SlideShowItem from "../components/SlideShowItem.vue"
   import TimeSettings from "../TimeSettings";
+  import Partners from "../components/Partners.vue";
 
   export default defineComponent({
     name: 'ProgramPage',
-    components: {SlideShowItem},
+    components: {Partners, SlideShowItem},
     setup() {
       let shows = ref([])
       let lastYear = ref(null)
