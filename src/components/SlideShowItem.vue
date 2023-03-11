@@ -209,7 +209,7 @@
 
   @keyframes photo-ease-in {
     0% {
-      transform: translateX(100vw);
+      transform: translateX(80vw);
       opacity: 0.1;
     }
     60% {

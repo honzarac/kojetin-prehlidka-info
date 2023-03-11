@@ -25,7 +25,7 @@ let AppController = class AppController {
         return { status: 'ok' };
     }
     async getShows() {
-        let loadDate = luxon_1.DateTime.fromISO('2023-03-08');
+        let loadDate = luxon_1.DateTime.fromISO('2023-03-11');
         let shows = await this.showService.getShows(loadDate);
         let showsPromises = shows.map(async (show) => await this.showTransformer.transform(show));
         let lastYearPhotos = await this.photoService.loadShowPhotosByFolder('2022');

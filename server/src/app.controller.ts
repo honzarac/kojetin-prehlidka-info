@@ -19,7 +19,7 @@ export class AppController {
 
   @Get('/shows')
   async getShows(): Promise<object> {
-    let loadDate = DateTime.fromISO('2023-03-08')
+    let loadDate = DateTime.fromISO('2023-03-11')
 
     let shows = await this.showService.getShows(loadDate)
     let showsPromises = shows.map(async (show) => await this.showTransformer.transform(show))

@@ -2,14 +2,14 @@
 export default class TimeSettings
 {
   // TESTING
-  static showDuration: number = 12 * 1000
-  static photoDuration: number = 6 * 1000
-  static lastYearPhotosDuration: number = 10 * 1000
+  // static showDuration: number = 8 * 1000
+  // static photoDuration: number = 4 * 1000
+  // static lastYearPhotosDuration: number = 15 * 1000
 
   // PROD
-  // static showDuration: number = 32 * 1000
-  // static photoDuration: number = 8 * 1000
-  // static lastYearPhotosDuration: number = 120 * 1000
+  static showDuration: number = 48 * 1000
+  static photoDuration: number = 8 * 1000
+  static lastYearPhotosDuration: number = 180 * 1000
 
   static printSettingTimes(shows: Array<Object>) {
     console.log('---------- TIME SETTINGS -------------')
