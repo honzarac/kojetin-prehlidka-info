@@ -13,8 +13,8 @@ class ShowsController
         response()
             ->header('Access-Control-Allow-Origin: *')
             ->json([
-//                'shows' => array_map(fn (Show $show) => $show->serialize(), self::shows()),
-                'shows' => array_map(fn (Show $show) => $show->serialize(), self::futureShows()),
+                'shows' => array_map(fn (Show $show) => $show->serialize(), self::shows()),
+//                'shows' => array_map(fn (Show $show) => $show->serialize(), self::futureShows()),
                 'lastYearPhotos' => listPublicImages('2023')
             ]);
     }
@@ -126,10 +126,11 @@ class ShowsController
             new Show(
                 showName: 'Jeppe',
                 groupName: 'Dohráli jsme Uherské Hradiště',
-                time: '13:00',
+                time: '14:00',
                 date: new DateTime('2024-03-10'),
                 duration: 80,
-                photoFolder: 'jeppe'
+                photoFolder: 'jeppe',
+                announcement: 'Posunutý záčátek na 14:00'
             ),
             new Show(
                 showName: 'Vyhlášení výsledků Divadelního Kojetína',

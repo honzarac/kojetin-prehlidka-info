@@ -10,6 +10,7 @@ class Show {
         private \DateTimeInterface $date = new \DateTimeImmutable(),
         private int|null           $duration = null,
         private string|null        $photoFolder = null,
+        private string|null        $announcement = null,
     )
     {
     }
@@ -27,7 +28,8 @@ class Show {
             'time' => $this->time,
             'date' => $this->date->format('Y-m-d'),
             'length' => $this->duration,
-            'photos' => $this->photoFolder ? listPublicImages($this->photoFolder) : []
+            'photos' => $this->photoFolder ? listPublicImages($this->photoFolder) : [],
+            'announcement' => $this->announcement,
         ];
     }
 }

@@ -6,6 +6,7 @@
       <span class="daytime" v-if="show.time"><b>{{ dayName }}</b> / <div class="time">{{show.time}} <span v-if="show.length">/ {{show.length}} minut</span></div></span>
       <div class="group-name" v-if="show.groupName">{{show.groupName}}</div>
       <h1 :class="[{'smaller': show.showName.length >= 20}]">{{show.showName}}</h1>
+      <div class="announcement" v-if="show.announcement">{{show.announcement}}</div>
     </div>
   </transition>
   <div :class="['slideshow-photo-wrap', {'active': currentPhoto === photoIndex}, {'leaving': leavingPhoto === photoIndex}]" v-for="(photo, photoIndex) in show.photos">
@@ -19,6 +20,7 @@
 import {onMounted, onUnmounted, ref, watch} from 'vue'
   import { DateTime } from "luxon";
   import Settings from "../Settings";
+import {useShows} from "../composables/useShows";
 
   const props = defineProps({
     show: {
@@ -33,7 +35,6 @@ import {onMounted, onUnmounted, ref, watch} from 'vue'
   const leavingPhoto = ref(null)
   const dayName = ref(props.show.date ? DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc') : null)
   const changingShow = ref(true)
-
 
   let nextPhoto = () => {
     if (props.show.photos.length == 0) {
@@ -172,6 +173,14 @@ import {onMounted, onUnmounted, ref, watch} from 'vue'
       animation: 1.3s photo-ease-out cubic-bezier(0.25, 1, 0.5, 1) 1;
       display: block;
     }
+  }
+
+  .announcement {
+    font-size: 2eM;
+    margin-top: 0.3eM;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #f58227;
   }
 
   @keyframes anim-lineUp {
