@@ -2,17 +2,14 @@ import {DateTime} from "luxon";
 
 export default class Settings
 {
-  // TESTING
-  static showDuration: number = 60 * 1000
-  static photoDuration: number = 1 * 1000
-  static lastYearPhotosDuration: number = 15 * 1000
-  static showCursor = true;
+  static showDuration: number = (this.isDev() ? 5 : 48) * 1000
+  static photoDuration: number = (this.isDev() ? 1 : 8) * 1000
+  static lastYearPhotosDuration: number = (this.isDev() ? 15 : 180) * 1000
+  static showCursor = this.isDev()
 
-  // PROD
-  // static showDuration: number = 48 * 1000
-  // static photoDuration: number = 8 * 1000
-  // static lastYearPhotosDuration: number = 180 * 1000
-  // static showCursor = false;
+  static isDev(){
+    return import.meta.env.DEV
+  }
 
   static printSettingTimes(shows: Array<Object>) {
     console.log('---------- TIME SETTINGS -------------')
