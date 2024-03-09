@@ -19,12 +19,12 @@ export class AppController {
 
   @Get('/shows')
   async getShows(): Promise<object> {
-    let loadDate = DateTime.fromISO('2023-03-11')
+    let loadDate = DateTime.fromISO(DateTime.now().toFormat('yyyy') + '-03-10')
 
     let shows = await this.showService.getShows(loadDate)
     let showsPromises = shows.map(async (show) => await this.showTransformer.transform(show))
 
-    let lastYearPhotos = await this.photoService.loadShowPhotosByFolder('2022')
+    let lastYearPhotos = await this.photoService.loadShowPhotosByFolder('2023')
     return {
       shows: await Promise.all(showsPromises),
       lastYearPhotos: lastYearPhotos,
@@ -32,7 +32,8 @@ export class AppController {
   }
 
   @Get('/import')
-  import(): void {
+  import() {
     this.showService.import();
+    return {status: 'ok'}
   }
 }
