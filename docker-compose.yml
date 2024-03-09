@@ -1,16 +1,19 @@
 version: '3'
 services:
-  server:
-    container_name: kjfestival_server
-    build:
-      context: ./ops/docker/server
-      dockerfile: ops/docker/Dockerfile
-    command: yarn run start:dev
+  app:
+    image: node:20
+    command: yarn dev --port 3000 --host
     ports:
-      - 3001:3001
+      - 3000:3000
+    working_dir: /app
     volumes:
-      - ./server:/app
-    environment:
-      NODE_ENV: 'develop'
-      MONGO_URL: mongodb://mongo/kjfestival
-      DATA_API_URL: http://localhost:3001
+      - .:/app
+
+  api:
+    image: php:8.3
+    command: php -S 0.0.0.0:8080
+    working_dir: /var/app/www
+    ports:
+      - 8080:8080
+    volumes:
+      - ./simpleserver:/var/app/www

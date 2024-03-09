@@ -13,7 +13,8 @@ class ShowsController
         response()
             ->header('Access-Control-Allow-Origin: *')
             ->json([
-                'shows' => array_map(fn (Show $show) => $show->serialize(), self::shows()),
+//                'shows' => array_map(fn (Show $show) => $show->serialize(), self::shows()),
+                'shows' => array_map(fn (Show $show) => $show->serialize(), self::futureShows()),
                 'lastYearPhotos' => listPublicImages('2023')
             ]);
     }
