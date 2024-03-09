@@ -1,20 +1,17 @@
 <template>
-  <div id="app" class="flex flex-row h-full">
-    <router-view></router-view>
+  <div id="app" class="flex flex-row h-full" :class="showCursor ? '' : 'no-cursor'">
+    <ProgramPage></ProgramPage>
   </div>
 </template>
 
-<script>
-import {defineComponent} from 'vue'
-
+<script setup>
 import './app.css'
 import 'animate.css'
 import {RouterView} from 'vue-router';
+import Settings from "./Settings";
+import ProgramPage from "./pages/ProgramPage.vue";
 
-export default defineComponent({
-  name: 'App',
-  components: {RouterView},
-})
+const showCursor = Settings.showCursor
 </script>
 
 <style>
@@ -29,5 +26,8 @@ export default defineComponent({
   }
   #app {
     height: 100%;
+  }
+  .no-cursor {
+    cursor: none;
   }
 </style>

@@ -15,55 +15,51 @@
   </div>
 </template>
 
-<script>
-  import {defineComponent, onMounted, ref, watch} from 'vue'
+<script setup>
+import {onMounted, onUnmounted, ref, watch} from 'vue'
   import { DateTime } from "luxon";
-  import TimeSettings from "../TimeSettings";
+  import Settings from "../Settings";
 
-  export default defineComponent({
-    name: 'SlideshowItem',
-    props: {
-      show: {
-        type: Object
-      },
-      autoplay: {
-        type: Boolean
-      }
+  const props = defineProps({
+    show: {
+      type: Object
     },
+    autoplay: {
+      type: Boolean
+    }
+  });
 
-    setup(props) {
-      const currentPhoto = ref(0)
-      const leavingPhoto = ref(null)
-      const dayName = ref(props.show.date ? DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc') : null)
-      const changingShow = ref(true)
+  const currentPhoto = ref(0)
+  const leavingPhoto = ref(null)
+  const dayName = ref(props.show.date ? DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc') : null)
+  const changingShow = ref(true)
 
 
-      let nextPhoto = () => {
-        leavingPhoto.value = currentPhoto.value
-        let randNextPhoto = currentPhoto.value;
-        do {
-          randNextPhoto = Math.floor(Math.random() * props.show.photos.length)
-        } while (randNextPhoto === currentPhoto.value)
-        currentPhoto.value = randNextPhoto;
-      }
+  let nextPhoto = () => {
+    if (props.show.photos.length == 0) {
+      return;
+    }
+    leavingPhoto.value = currentPhoto.value
+    let randNextPhoto = currentPhoto.value;
+    do {
+      randNextPhoto = Math.floor(Math.random() * props.show.photos.length)
+    } while (randNextPhoto === currentPhoto.value)
+    currentPhoto.value = randNextPhoto;
+  }
 
-      onMounted(async () => {
-        setInterval(() => { if (props.autoplay) { nextPhoto() }}, TimeSettings.photoDuration)
-      })
+  onMounted(async () => {
+    setInterval(() => { if (props.autoplay) { nextPhoto() }}, Settings.photoDuration)
+  })
 
-      watch(() => props.show, (newShow, oldShow) => {
-        if (newShow.showName !== oldShow.showName) {
-          changingShow.value = false
-          currentPhoto.value = null
-          leavingPhoto.value = null
-          nextPhoto()
-          dayName.value = props.show.date ? DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc') : null
-          setTimeout(() => changingShow.value = true, 30)
-        }
-      });
-
-      return { currentPhoto, leavingPhoto, dayName, changingShow }
-    },
+  watch(() => props.show, (newShow, oldShow) => {
+    if (newShow.showName !== oldShow.showName) {
+      changingShow.value = false
+      currentPhoto.value = null
+      leavingPhoto.value = null
+      nextPhoto()
+      dayName.value = props.show.date ? DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc') : null
+      setTimeout(() => changingShow.value = true, 30)
+    }
   });
 </script>
 

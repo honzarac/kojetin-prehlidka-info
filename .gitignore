@@ -1,2 +1,5 @@
 ﻿.idea
 node_modules
+simpleserver/vendor
+dist
+simpleserver/static/shows

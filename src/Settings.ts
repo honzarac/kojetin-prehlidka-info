@@ -1,15 +1,18 @@
+import {DateTime} from "luxon";
 
-export default class TimeSettings
+export default class Settings
 {
   // TESTING
-  // static showDuration: number = 8 * 1000
-  // static photoDuration: number = 4 * 1000
-  // static lastYearPhotosDuration: number = 15 * 1000
+  static showDuration: number = 60 * 1000
+  static photoDuration: number = 1 * 1000
+  static lastYearPhotosDuration: number = 15 * 1000
+  static showCursor = true;
 
   // PROD
-  static showDuration: number = 48 * 1000
-  static photoDuration: number = 8 * 1000
-  static lastYearPhotosDuration: number = 180 * 1000
+  // static showDuration: number = 48 * 1000
+  // static photoDuration: number = 8 * 1000
+  // static lastYearPhotosDuration: number = 180 * 1000
+  // static showCursor = false;
 
   static printSettingTimes(shows: Array<Object>) {
     console.log('---------- TIME SETTINGS -------------')
@@ -28,4 +31,6 @@ export default class TimeSettings
     }
     return Math.floor(seconds/60) + 'm ' + (seconds%60) + 's'
   }
+
+  static year = DateTime.now().toFormat('yyyy')
 }

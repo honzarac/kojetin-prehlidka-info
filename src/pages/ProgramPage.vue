@@ -1,74 +1,74 @@
 <template>
   <div class="icon">
     <img src="/logo.png">
-    <h2>DIVADELNÍ KOJETÍN<br><b>2023</b></h2>
+    <h2>DIVADELNÍ KOJETÍN<br><b>{{ year }}</b></h2>
   </div>
-  <div class="slideshow">
+  <div class="slideshow" @keyup.right="nextShow()">
     <SlideShowItem :show="shows[currentShowIndex]" :autoplay="autoplay" v-if="!loading && !showLastYearSlideshow"></SlideShowItem>
     <SlideShowItem :show="lastYear" :autoplay="autoplay" v-if="!loading && showLastYearSlideshow"></SlideShowItem>
   </div>
 </template>
 
-<script>
-  import {defineComponent, onMounted, ref} from 'vue'
+<script setup>
+import {defineComponent, onBeforeMount, onBeforeUnmount, onMounted, ref} from 'vue'
 
   import client from "../service/axios"
   import SlideShowItem from "../components/SlideShowItem.vue"
-  import TimeSettings from "../TimeSettings";
+  import Settings from "../Settings";
+  let shows = ref([])
+  let lastYear = ref(null)
+  let autoplay = ref(true)
+  let loading = ref(true)
+  let currentShowIndex = ref(0)
+  let showLastYearSlideshow = ref(false)
+  let year = Settings.year
 
-  export default defineComponent({
-    name: 'ProgramPage',
-    components: {SlideShowItem},
-    setup() {
-      let shows = ref([])
-      let lastYear = ref(null)
-      let autoplay = ref(true)
-      let loading = ref(true)
-      let currentShowIndex = ref(0)
-      let showLastYearSlideshow = ref(false)
-
-      const loadShows = async () => {
-        loading.value = true
-        try {
-          const data = await client.get('/shows')
-          shows.value = data.shows
-          lastYear.value = {
-            showName: 'Divadelní Kojetín 2022',
-            groupName: null,
-            time: null,
-            length: null,
-            date: null,
-            photos: data.lastYearPhotos
-          }
-          TimeSettings.printSettingTimes(shows.value)
-        } finally {
-          loading.value = false
-        }
+  const loadShows = async () => {
+    loading.value = true
+    try {
+      const data = await client.get('/shows')
+      shows.value = data.shows
+      lastYear.value = {
+        showName: 'Divadelní Kojetín 2023',
+        groupName: null,
+        time: null,
+        length: null,
+        date: null,
+        photos: data.lastYearPhotos
       }
+      Settings.printSettingTimes(shows.value)
+    } finally {
+      loading.value = false
+    }
+  }
 
-      const nextShow = () => {
-        if (showLastYearSlideshow.value) {
-          return
-        } else if (currentShowIndex.value === (shows.value.length-1)) {
-          showLastYearSlideshow.value = true
-          setTimeout(() => {
-            currentShowIndex.value = 0
-            showLastYearSlideshow.value = false
-          }, TimeSettings.lastYearPhotosDuration)
-        } else {
-          autoplay.value = false
-          currentShowIndex.value = currentShowIndex.value+1
-          setTimeout(() => autoplay.value = true, 2000)
-        }
-      }
+  const nextShow = () => {
+    if (showLastYearSlideshow.value) {
+      return
+    } else if (currentShowIndex.value === (shows.value.length-1)) {
+      showLastYearSlideshow.value = true
+      setTimeout(() => {
+        currentShowIndex.value = 0
+        showLastYearSlideshow.value = false
+      }, Settings.lastYearPhotosDuration)
+    } else {
+      autoplay.value = false
+      currentShowIndex.value = currentShowIndex.value+1
+      setTimeout(() => autoplay.value = true, 2000)
+    }
+  }
 
-      onMounted(async () => {
-        await loadShows()
-        setInterval(nextShow, TimeSettings.showDuration)
-      })
+  onMounted(async () => {
+    await loadShows()
+    setInterval(nextShow, Settings.showDuration)
+  })
 
-      return { loading, currentShowIndex, shows, autoplay, showLastYearSlideshow, lastYear }
-    },
+  const moveShows = (e) => { if (e.keyCode === 39) { nextShow()}}
+  onBeforeMount(() => {
+    window.addEventListener('keydown', moveShows, null)
+  })
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', moveShows)
   })
 </script>
 
@@ -80,7 +80,6 @@
   .slideshow, .slideshow-item, .slideshow-photo-wrap, .slideshow-photo {
     width: 100%;
     height: 100%;
-    cursor: none;
   }
   .icon {
     background: black;

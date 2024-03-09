@@ -1,7 +1,7 @@
 import Axios from "axios";
 
 const client = Axios.create({
-    baseURL: 'http://localhost:3001',
+    baseURL: 'http://localhost:8080',
     //validateStatus: status => status >= 200 && status < 300 //mezi 200 - 299
 })
 

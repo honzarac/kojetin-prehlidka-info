@@ -4,7 +4,7 @@ services:
     container_name: kjfestival_server
     build:
       context: ./ops/docker/server
-      dockerfile: Dockerfile
+      dockerfile: ops/docker/Dockerfile
     command: yarn run start:dev
     ports:
       - 3001:3001
@@ -14,12 +14,3 @@ services:
       NODE_ENV: 'develop'
       MONGO_URL: mongodb://mongo/kjfestival
       DATA_API_URL: http://localhost:3001
-
-  mongo:
-    image: mongo
-    container_name: kjfestival_mongo
-    restart: always
-    ports:
-      - 27017:27017
-    environment:
-      MONGO_INITDB_DATABASE: kjfestival
