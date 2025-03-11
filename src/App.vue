@@ -10,8 +10,22 @@ import 'animate.css'
 import {RouterView} from 'vue-router';
 import Settings from "./Settings";
 import ProgramPage from "./pages/ProgramPage.vue";
+import {ref} from "vue";
+import {DateTime} from "luxon";
 
-const showCursor = Settings.showCursor
+const showCursor = ref(true)
+const openedSettings = ref(false)
+
+const cursorLastMoved = ref(DateTime.now())
+setInterval(() => {
+  if (showCursor.value && DateTime.now().diff(cursorLastMoved.value, 'second').get('second') > 10) {
+    showCursor.value = false
+  }
+}, 10000)
+document.addEventListener('mousemove', () => {
+  showCursor.value = true
+  cursorLastMoved.value = DateTime.now()
+})
 </script>
 
 <style>
