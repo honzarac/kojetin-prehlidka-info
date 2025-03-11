@@ -5,7 +5,7 @@
     <div :class="['slideshow-item-info', {'animate': changingShow}]">
       <span class="daytime" v-if="show.time"><b>{{ dayName }}</b> / <div class="time">{{show.time}} <span v-if="show.length">/ {{show.length}} minut</span></div></span>
       <div class="group-name" v-if="show.groupName">{{show.groupName}}</div>
-      <h1 :class="[{'smaller': show.showName.length >= 20}]">{{show.showName}}</h1>
+      <h1 :class="showClass">{{show.showName}}</h1>
       <div class="announcement" v-if="show.announcement">{{show.announcement}}</div>
     </div>
   </transition>
@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import {onMounted, onUnmounted, ref, watch} from 'vue'
+import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
   import { DateTime } from "luxon";
   import Settings from "../Settings";
 import {useShows} from "../composables/useShows";
@@ -28,6 +28,10 @@ import {useShows} from "../composables/useShows";
     },
     autoplay: {
       type: Boolean
+    },
+    photoDuration: {
+      required: true,
+      type: Number
     }
   });
 
@@ -35,10 +39,30 @@ import {useShows} from "../composables/useShows";
   const leavingPhoto = ref(null)
   const dayName = ref(props.show.date ? DateTime.fromISO(props.show.date).setLocale('cs').toFormat('cccc') : null)
   const changingShow = ref(true)
+  const loopInterval = ref(null)
+  const photoDuration = computed(() => props.photoDuration)
+
+  const showClass = computed(() => {
+    const showTitleLength = props.show.showName.length
+    if (showTitleLength < 10) {
+      return 'xxl'
+    }
+    if (showTitleLength < 25) {
+      return 'xl'
+    }
+    if (showTitleLength < 50) {
+      return 'md'
+    }
+    return 'sm'
+  })
 
   let nextPhoto = () => {
-    if (props.show.photos.length == 0) {
+    if (props.show.photos.length === 0) {
       return;
+    }
+    if (props.show.photos.length === 1) {
+      currentPhoto.value = 0;
+      return
     }
     leavingPhoto.value = currentPhoto.value
     let randNextPhoto = currentPhoto.value;
@@ -49,7 +73,7 @@ import {useShows} from "../composables/useShows";
   }
 
   onMounted(async () => {
-    setInterval(() => { if (props.autoplay) { nextPhoto() }}, Settings.photoDuration)
+    loopInterval.value = setInterval(() => { if (props.autoplay) { nextPhoto() }}, photoDuration.value)
   })
 
   watch(() => props.show, (newShow, oldShow) => {
@@ -62,6 +86,14 @@ import {useShows} from "../composables/useShows";
       setTimeout(() => changingShow.value = true, 30)
     }
   });
+
+  watch(photoDuration, (newDuration, oldDuration) => {
+    if (newDuration === oldDuration) {
+      return
+    }
+    clearInterval(loopInterval.value)
+    loopInterval.value = setInterval(() => { if (props.autoplay) { nextPhoto() }}, newDuration)
+  })
 </script>
 
 <style lang="scss">
@@ -74,7 +106,7 @@ import {useShows} from "../composables/useShows";
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 70%;
+    height: 85%;
     z-index: 110;
     background: linear-gradient(
             to bottom,
@@ -118,14 +150,27 @@ import {useShows} from "../composables/useShows";
     }
     h1 {
       z-index: 5;
-      line-height: 180px;
       letter-spacing: -6px;
       font-weight: 800;
-      font-size: 160px;
-      width: 60vw;
-      &.smaller {
-        font-size: 100px;
-        line-height: 120px;
+      width: 75vw;
+      &.xxl {
+        line-height: 180px;
+        font-size: 180px;
+      }
+      &.xl {
+        font-size: 135px;
+        line-height: 160px;
+        letter-spacing: -3px;
+      }
+      &.md {
+        font-size: 110px;
+        line-height: 130px;
+        letter-spacing: -3px;
+      }
+      &.sm {
+        font-size: 80px;
+        line-height: 100px;
+        letter-spacing: -3px;
       }
     }
     .group-name {

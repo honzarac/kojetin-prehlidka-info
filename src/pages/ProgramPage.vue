@@ -1,20 +1,41 @@
 <template>
   <div class="play-state" v-if="playState">{{playState}}</div>
   <div class="icon">
-    <img src="/logo.png">
+    <img src="/logo.png" @click="emit('openSettings')">
     <h2>DIVADELNÍ KOJETÍN<br><b>{{ year }}</b></h2>
   </div>
   <div class="slideshow" @keyup.right="nextShow()" v-if="!loading">
-    <SlideShowItem :show="shows[currentShowIndex]" :autoplay="autoplay"></SlideShowItem>
+    <SlideShowItem
+      :show="shows[currentShowIndex]"
+      :autoplay="autoplay"
+      :photoDuration="photoDuration"
+    ></SlideShowItem>
   </div>
 </template>
 
 <script setup>
-import {onBeforeMount, onBeforeUnmount, onMounted, ref, toRefs} from 'vue'
+import {computed, onBeforeMount, onBeforeUnmount, onMounted, ref, toRefs} from 'vue'
 
 import SlideShowItem from "../components/SlideShowItem.vue"
 import Settings from "../Settings";
 import {useShows} from "../composables/useShows";
+const emit = defineEmits(['openSettings'])
+
+const props = defineProps({
+  showDuration: {
+    required: true,
+    type: Number
+  },
+  photoDuration: {
+    required: true,
+    type: Number
+  },
+  lastYearPhotoDuration: {
+    required: true,
+    type: Number
+  }
+})
+
 let autoplay = ref(true)
 let currentShowIndex = ref(0)
 let year = Settings.year
@@ -23,13 +44,30 @@ let playState = ref(null)
 const currentTimeout = ref();
 
 const showsComposable = useShows();
-const {loading, shows} = toRefs(showsComposable)
+const {loading, showsResult} = toRefs(showsComposable)
+const shows = computed(() => {
+  if (!showsComposable.shows.value) {
+    return []
+  }
+  return [
+    ...showsComposable.shows.value,
+    {
+      showName: 'Divadelní Kojetín 2024',
+      groupName: null,
+      time: null,
+      length: null,
+      date: null,
+      photos: showsComposable.lastYearPhotos.value,
+      slideDuration: props.lastYearPhotoDuration,
+    }
+  ]
+})
 
 const nextShow = (goTo) => {
   autoplay.value = false
   currentShowIndex.value = currentShowIndex.value === (shows.value.length-1) ? 0 : (goTo ?? currentShowIndex.value+1)
   setTimeout(() => autoplay.value = true, 2000)
-  currentTimeout.value = setTimeout(nextShow, shows.value[currentShowIndex.value]?.slideDuration ?? Settings.showDuration)
+  currentTimeout.value = setTimeout(nextShow, shows.value[currentShowIndex.value]?.slideDuration ?? props.showDuration)
 }
 
 onMounted(async () => {

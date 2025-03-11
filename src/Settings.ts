@@ -5,7 +5,20 @@ export default class Settings
   static showDuration: number = (this.isDev() ? 5 : 48) * 1000
   static photoDuration: number = (this.isDev() ? 1 : 8) * 1000
   static lastYearPhotosDuration: number = (this.isDev() ? 15 : 180) * 1000
-  static showCursor = this.isDev()
+
+  static getShowDuration() {
+    if (localStorage.getItem('showDuration')) {
+      return localStorage.getItem('showDuration') * 1000
+    }
+    return Settings.showDuration
+  }
+
+  static getPhotoDuration() {
+    if (localStorage.getItem('photoDuration')) {
+      return localStorage.getItem('photoDuration') * 1000
+    }
+    return Settings.photoDuration
+  }
 
   static isDev(){
     return import.meta.env.DEV
