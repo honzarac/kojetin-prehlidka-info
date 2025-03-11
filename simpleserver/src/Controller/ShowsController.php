@@ -15,7 +15,7 @@ class ShowsController
             ->json([
                 'shows' => array_map(fn (Show $show) => $show->serialize(), self::shows()),
 //                'shows' => array_map(fn (Show $show) => $show->serialize(), self::futureShows()),
-                'lastYearPhotos' => listPublicImages('2023')
+                'lastYearPhotos' => listPublicImages('2024')
             ]);
     }
 
@@ -30,113 +30,100 @@ class ShowsController
     private static function shows(): array
     {
         return [
-//            new Show(
-//                showName: 'Zahájení přehlídky',
-//                time: '20:00',
-//                date: new DateTime('2024-03-06')
-//            ),
             new Show(
-                showName: 'Mariáš života',
-                groupName: 'DS Kroměříž',
-                time: '20:10',
-                date: new DateTime('2024-03-06'),
-                duration: 65,
-                photoFolder: 'marias'
-            ),
-//            new Show(
-//                showName: 'Trojlístek pohádek',
-//                groupName: 'Divadýlko Mrak',
-//                time: '08:15',
-//                date: new DateTime('2024-03-07'),
-//                duration: 70,
-//                photoFolder: 'trojlistek'
-//            ),
-//            new Show(
-//                showName: 'Trojlístek pohádek',
-//                groupName: 'Divadýlko Mrak',
-//                time: '10:00',
-//                date: new DateTime('2024-03-07'),
-//                duration: 60,
-//                photoFolder: 'trojlistek'
-//            ),
-            new Show(
-                showName: 'Upokojenkyně',
-                groupName: 'Divadelní spolek J. K. Tyl Brodek u Přerova',
-                time: '20:00',
-                date: new DateTime('2024-03-07'),
-                duration: 90,
-                photoFolder: 'upokojenkyne'
-            ),
-            new Show(
-                showName: 'S čerty nejsou žerty',
-                groupName: 'Metropolitní divadlo Praha',
-                time: '11:00',
-                date: new DateTime('2024-03-08'),
+                showName: 'Vodník Česílko', // 14
+                groupName: 'Divadlo Scéna Zlín',
+                time: '08:15 a 10:00',
+                date: new DateTime('2025-03-13'),
                 duration: 60,
-                photoFolder: 'certi'
+                photoFolder: 'cesilko'
             ),
             new Show(
-                showName: 'Vichřice v domě č. 11',
-                groupName: 'Studio SEN Olomouc',
-                time: '17:00',
-                date: new DateTime('2024-03-08'),
-                duration: 60,
-                photoFolder: 'vychrice'
-            ),
-            new Show(
-                showName: 'Tři holky jako květ',
-                groupName: 'Smotaná hadice Křenovice',
+                showName: 'Převýborná historie o benátském kupci aneb Kabaret karneval věkem zaprášený, leč na výsost aktuální', // 99
+                groupName: 'Ořechovské divadlo',
                 time: '20:00',
-                date: new DateTime('2024-03-08'),
-                duration: 110,
-                photoFolder: 'kvet'
-            ),
-            new Show(
-                showName: 'Kandidát',
-                groupName: 'Divadelní studio Viktorka Holešov',
-                time: '11:00',
-                date: new DateTime('2024-03-09'),
-                duration: 75,
-                photoFolder: 'kandidat'
-            ),
-            new Show(
-                showName: 'Marie, dcera Kajetánova',
-                groupName: 'Morkovští ochotníci',
-                time: '16:00',
-                date: new DateTime('2024-03-09'),
-                duration: 70,
-                photoFolder: 'marie'
-            ),
-            new Show(
-                showName: 'Není co skrývat',
-                groupName: 'Divadlo Dostavník Přerov',
-                time: '20:00',
-                date: new DateTime('2024-03-09'),
+                date: new DateTime('2025-03-12'),
                 duration: 90,
-                photoFolder: 'dostavnik'
+                photoFolder: 'orechov'
             ),
             new Show(
-                showName: 'Zařídil ti to Povondra (Válka s mloky)',
-                groupName: 'Studio divadla Haná Vyškov',
+                showName: 'Pověsti pro štěstí', // 18
+                groupName: 'Divadlo SemTamFór',
+                time: '08:15',
+                date: new DateTime('2025-03-13'),
+                photoFolder: 'povesti'
+            ),
+            new Show(
+                showName: 'Sbohem, zůstávám!', // 17
+                groupName: 'DS Osvětové besedy Velká Bystřice',
+                time: '20:00',
+                date: new DateTime('2025-03-13'),
+                duration: 115,
+                photoFolder: 'sbohem'
+            ),
+            new Show(
+                showName: 'Strašidlo Cantervillské', // 23
+                groupName: 'Malá scéna ZUŠ Zlín',
                 time: '10:00',
-                date: new DateTime('2024-03-10'),
-                duration: 85,
-                photoFolder: 'mloci'
+                date: new DateTime('2025-03-14'),
+                duration: 70,
+                photoFolder: 'strasidlo'
             ),
             new Show(
-                showName: 'Jeppe',
-                groupName: 'Dohráli jsme Uherské Hradiště',
+                showName: 'Co s námi teď bude?', // 19
+                groupName: 'Spurníkův ochotnický soubor Sokola Litovel',
+                time: '16:00',
+                date: new DateTime('2025-03-14'),
+                duration: 117,
+                photoFolder: 'litovel'
+            ),
+            new Show(
+                showName: 'Ve státním zájmu', // 16
+                groupName: 'K.V.A.S. Karviná',
+                time: '20:00',
+                date: new DateTime('2025-03-14'),
+                duration: 125,
+                photoFolder: 'statni_zajem'
+            ),
+            new Show(
+                showName: 'Velký vandr aneb Podivuhodní skutkové hanáckého zámečníka na zlatém severu', // 74
+                groupName: 'Divadlo Václav Václavov',
+                time: '10:00',
+                date: new DateTime('2025-03-15'),
+                duration: 120,
+                photoFolder: 'vandr'
+            ),
+            new Show(
+                showName: 'Olga – Femini skeč o manželce Karla Čapka', // 41
+                groupName: 'Divadelní spolek Dialog Brno',
                 time: '14:00',
-                date: new DateTime('2024-03-10'),
-                duration: 80,
-                photoFolder: 'jeppe',
-                announcement: 'Posunutý záčátek na 14:00'
+                date: new DateTime('2025-03-15'),
+                duration: 60,
+                photoFolder: 'dialog'
             ),
             new Show(
-                showName: 'Vyhlášení výsledků Divadelního Kojetína',
-                time: '16:30',
-                date: new DateTime('2024-03-10'),
-                photoFolder: 'vyhlaseni'
+                showName: 'Zaklínač', // 8
+                groupName: 'Volné divadlo Zlín',
+                time: '17:00',
+                date: new DateTime('2025-03-15'),
+                duration: 50,
+                photoFolder: 'zaklinac'
+            ),
+            new Show(
+                showName: 'Česká maminka', // 13
+                groupName: 'Divadelní soubor Karla Högera Strání',
+                time: '20:00',
+                date: new DateTime('2025-03-15'),
+                duration: 125,
+                photoFolder: 'strani'
+            ),
+            new Show(
+                showName: 'Houbová polévka Naděždy Konstantinovny Krupské', // 46
+                groupName: 'Stará aréna Ostrava',
+                time: '11:00',
+                date: new DateTime('2025-03-16'),
+                duration: 90,
+                photoFolder: 'houbova_polevka'
             ),
         ];
     }
