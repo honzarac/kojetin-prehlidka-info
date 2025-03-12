@@ -59,6 +59,19 @@ const shows = computed(() => {
       date: null,
       photos: showsComposable.lastYearPhotos.value,
       slideDuration: props.lastYearPhotoDuration,
+    },
+    {
+      showName: 'Sponzoři',
+      groupName: null,
+      time: null,
+      length: null,
+      date: null,
+      photos: [
+        "http://localhost:8080/static/sponzors/image.png",
+        "http://localhost:8080/static/sponzors/image2.png",
+        "http://localhost:8080/static/sponzors/image3.png",
+      ],
+      slideDuration: 15_000,
     }
   ]
 })
