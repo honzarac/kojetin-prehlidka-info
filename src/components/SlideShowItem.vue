@@ -66,6 +66,12 @@ import {useShows} from "../composables/useShows";
     }
     leavingPhoto.value = currentPhoto.value
     let randNextPhoto = currentPhoto.value;
+    // if (currentPhoto.value === props.show.photos.length - 1) {
+    //   currentPhoto.value = 0;
+    // } else {
+    //   currentPhoto.value = currentPhoto.value + 1;
+    // }
+    // return;
     do {
       randNextPhoto = Math.floor(Math.random() * props.show.photos.length)
     } while (randNextPhoto === currentPhoto.value)

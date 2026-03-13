@@ -52,7 +52,7 @@ const shows = computed(() => {
   return [
     ...showsComposable.shows.value,
     {
-      showName: 'Divadelní Kojetín 2024',
+      showName: 'Divadelní Kojetín 2025',
       groupName: null,
       time: null,
       length: null,

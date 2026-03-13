@@ -25,7 +25,7 @@ function listPublicImages(string $folder): array {
     /** @var SplFileInfo $file */
     $photos = [];
     foreach ($recursiveIterator as $file ) {
-        if (!in_array($file->getExtension(), ['jpg', 'jpeg', 'png', 'gif'])) {
+        if (!in_array(strtolower($file->getExtension()), ['jpg', 'jpeg', 'png', 'gif'])) {
             continue;
         }
         $photos[] = 'http://localhost:8080/' .
