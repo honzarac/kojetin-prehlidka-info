@@ -7,15 +7,17 @@ export default class Settings
   static lastYearPhotosDuration: number = (this.isDev() ? 15 : 180) * 1000
 
   static getShowDuration() {
-    if (localStorage.getItem('showDuration')) {
-      return localStorage.getItem('showDuration') * 1000
+    const storageShowDuration = localStorage.getItem('showDuration')
+    if (storageShowDuration) {
+      return parseInt(storageShowDuration) * 1000
     }
     return Settings.showDuration
   }
 
   static getPhotoDuration() {
-    if (localStorage.getItem('photoDuration')) {
-      return localStorage.getItem('photoDuration') * 1000
+    const storagePhotoDuration = localStorage.getItem('photoDuration')
+    if (storagePhotoDuration) {
+      return parseInt(storagePhotoDuration) * 1000
     }
     return Settings.photoDuration
   }
